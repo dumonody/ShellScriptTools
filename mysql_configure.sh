@@ -45,15 +45,13 @@ mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 #	重启mysql数据库
 systemctl restart mysqld
 
+#	设置允许远程登录，并具有所有库任何操作权限
 #	将授权操作语句写入到sql.log文件中
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" > sql.log
-
-#	设置允许远程登录，并具有所有库任何操作权限
-mysql -uroot -p$initPassword < sql.log
-
 #	重载授权表
-echo "FLUSH PRIVILEGES;" > sql.log
-mysql -uroot -p$initPassword < sql.log
+echo "FLUSH PRIVILEGES;" >> sql.log
+
+mysql -uroot -p$initPassword --connect-expired-password < sql.log
 
 
 #	设置UTF-8字符集，在特定字符串[mysqld]后面添加一行character-set-server=utf8,注意转义字符
