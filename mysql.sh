@@ -15,7 +15,7 @@ systemctl start mysqld
 #	获取当前的数据库密码
 sqlPasswd=$(grep "password.*root@localhost" /var/log/mysqld.log)
 sqlPasswd=${sqlPasswd##*root@localhost: }
-
+echo "您默认的初始密码是：$sqlPasswd"
 #	设置验证密码方针，将默认的ON设置为LOW
 echo "set global validate_password_policy=0;" > sql.log
 mysql -uroot -p$sqlPasswd < sql.log
@@ -32,15 +32,16 @@ mysql -uroot -p$sqlPasswd < sql.log
 #	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
 
 #	设置一个初始密码
-echo -e "请设置mysql数据库初始密码：\C"
+echo -e "请设置mysql数据库初始密码：\c"
 read initPassword
+echo "您输入的密码是：$initPassword"
 
 #	创建目录/root/secret,以及密码文件mysql_initPassword
 mkdir /root/secret/
 touch /root/secret/mysql_initPassword
 
 #	保存到mysql_initPassword中
-echo $initPassword>>/root/secret/mysql_initPassword
+echo "$initPassword" >> /root/secret/mysql_initPassword
 
 #	生成一个新的sql语句，用于修改初始密码
 echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" > sql.log
