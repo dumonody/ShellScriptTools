@@ -39,6 +39,7 @@ echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
 #	将sql文件内容导入，完成初始密码的修改，初始密码保存于mysql_password中
 echo "输出sql.log文件内容"
 cat sql.log
+echo "输出初始默认密码：$sqlPasswd"
 mysql -uroot -p$sqlPasswd < sql.log
 
 #	重启mysql数据库
