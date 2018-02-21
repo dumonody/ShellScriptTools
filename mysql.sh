@@ -18,21 +18,14 @@ sqlPasswd=${sqlPasswd##*root@localhost: }
 echo "您默认的初始密码是：$sqlPasswd"
 #	设置验证密码方针，将默认的ON设置为LOW
 echo "set global validate_password_policy=0;" > sql.log
-mysql -uroot -p$sqlPasswd < sql.log
+mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 
 #	设置验证密码长度，将默认的8设置为4，这里有个特定算法
 echo "set global validate_password_length=4;" > sql.log
-mysql -uroot -p$sqlPasswd < sql.log
+mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 
 #	经过这两步设置，密码就可以设置得很简单
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
-
-echo
-echo
-echo
-echo
-echo
-
 
 #	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
 
@@ -51,13 +44,13 @@ echo "$initPassword" >> /root/secret/mysql_initPassword
 echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" > sql.log
 
 #	将sql文件内容导入，完成初始密码的修改，初始密码保存于mysql_password中
-mysql -uroot -p$sqlPasswd < sql.log
+mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 
 #	将授权操作语句写入到sql.log文件中
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" > sql.log
 
 #	设置允许远程登录，并具有所有库任何操作权限
-mysql -uroot -p$initPassword < sql.log
+mysql -uroot -p$initPassword --connect-expired-password < sql.log
 
 #	重载授权表
 echo "FLUSH PRIVILEGES;" > sql.log
