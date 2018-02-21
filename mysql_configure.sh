@@ -1,5 +1,14 @@
 #!/bin/bash
-# mysql_configure.sh
+
+#	下载并安装Mysql的官方的Yum Repository
+wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+
+#	执行上面的命令之后，可以直接yum安装了
+yum -y install mysql57-community-release-el7-10.noarch.rpm
+
+#	开始安装mysql服务器,这步完成之后会覆盖掉之前的mariadb
+yum -y install mysql-community-server
+
 #	启动mysql
 systemctl start mysqld
 
@@ -28,6 +37,8 @@ echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" >> sql.log
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
 echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
 #	将sql文件内容导入，完成初始密码的修改，初始密码保存于mysql_password中
+echo "输出sql.log文件内容"
+cat sql.log
 mysql -uroot -p$sqlPasswd < sql.log
 
 #	重启mysql数据库
