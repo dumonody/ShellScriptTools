@@ -68,5 +68,5 @@ systemctl restart firewalld
 #	重启数据库
 systemctl restart mysqld
 
-#	卸载Yum Repository防止数据库自动更新
+#	卸载Yum Repository，防止数据库自动更新
 yum -y remove mysql57-community-release-el7-10.noarch
