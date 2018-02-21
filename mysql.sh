@@ -16,45 +16,41 @@ systemctl start mysqld
 sqlPasswd=$(grep "password.*root@localhost" /var/log/mysqld.log)
 sqlPasswd=${sqlPasswd##*root@localhost: }
 echo "您默认的初始密码是：$sqlPasswd"
+
+#	经过下面两步设置，密码就可以设置得很简单
 #	设置验证密码方针，将默认的ON设置为LOW
 echo "set global validate_password_policy=0;" > sql.log
-mysql -uroot -p$sqlPasswd --show-warnings=false < sql.log
-
 #	设置验证密码长度，将默认的8设置为4，这里有个特定算法
-echo "set global validate_password_length=4;" > sql.log
-mysql -uroot -p$sqlPasswd --show-warnings=false < sql.log
-
-#	经过这两步设置，密码就可以设置得很简单
-#	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
-
-#	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
-
-#	设置一个初始密码
+echo "set global validate_password_length=4;" >> sql.log
+#	设置新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
 read -p "请设置mysql数据库初始密码:" initPassword
 echo "您输入的密码是：$initPassword"
-
 #	创建目录/root/secret,以及密码文件mysql_initPassword
-mkdir /root/secret/
+mkdir -p /root/secret/
 touch /root/secret/mysql_initPassword
 
 #	保存到mysql_initPassword中
-echo "$initPassword" >> /root/secret/mysql_initPassword
+echo "$initPassword" > /root/secret/mysql_initPassword
 
 #	生成一个新的sql语句，用于修改初始密码
-echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" > sql.log
-
+echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" >> sql.log
+#	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
+echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
 #	将sql文件内容导入，完成初始密码的修改，初始密码保存于mysql_password中
-mysql -uroot -p$sqlPasswd --show-warnings=false < sql.log
+mysql -uroot -p$sqlPasswd < sql.log
+
+#	重启mysql数据库
+systemctl restart mysqld
 
 #	将授权操作语句写入到sql.log文件中
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" > sql.log
 
 #	设置允许远程登录，并具有所有库任何操作权限
-mysql -uroot -p$initPassword --show-warnings=false < sql.log
+mysql -uroot -p$initPassword < sql.log
 
 #	重载授权表
 echo "FLUSH PRIVILEGES;" > sql.log
-mysql -uroot -p$initPassword --show-warnings=false < sql.log
+mysql -uroot -p$initPassword < sql.log
 
 
 #	设置UTF-8字符集，在特定字符串[mysqld]后面添加一行character-set-server=utf8,注意转义字符
