@@ -27,12 +27,17 @@ mysql -uroot -p$sqlPasswd < sql.log
 #	经过这两步设置，密码就可以设置得很简单
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
 
+echo
+echo
+echo
+echo
+echo
 
 
 #	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
 
 #	设置一个初始密码
-read -e -p "请设置mysql数据库初始密码：" initPassword
+read -p "请设置mysql数据库初始密码:" initPassword
 echo "您输入的密码是：$initPassword"
 
 #	创建目录/root/secret,以及密码文件mysql_initPassword
