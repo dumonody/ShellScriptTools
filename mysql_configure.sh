@@ -41,8 +41,10 @@ systemctl restart mysqld
 #	设置允许远程登录，并具有所有库任何操作权限
 echo "set global validate_password_policy=0;" > sql.log
 echo "set global validate_password_length=4;" >> sql.log
+sleep 1s
 #	将授权操作语句写入到sql.log文件中
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" >> sql.log
+sleep 1s
 #	重载授权表
 echo "FLUSH PRIVILEGES;" >> sql.log
 
