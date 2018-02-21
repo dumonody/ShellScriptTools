@@ -16,18 +16,17 @@ systemctl start mysqld
 sqlPasswd=$(grep "password.*root@localhost" /var/log/mysqld.log)
 sqlPasswd=${sqlPasswd##*root@localhost: }
 
-#	进入数据库
-mysql -uroot -p$sqlPasswd
-
 #	设置验证密码方针，将默认的ON设置为LOW
-set global validate_password_policy=0;
+echo "set global validate_password_policy=0;" > sql.log
+mysql -uroot -p$initPassword < sql.log
+
 #	设置验证密码长度，将默认的8设置为4，这里有个特定算法
-set global validate_password_length=4;
+echo "set global validate_password_length=4;" > sql.log
+mysql -uroot -p$initPassword < sql.log
+
 #	经过这两步设置，密码就可以设置得很简单
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
 
-#	退出数据库
-exit;
 
 
 #	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
@@ -68,5 +67,7 @@ systemctl restart firewalld
 #	重启数据库
 systemctl restart mysqld
 
-#	卸载Yum Repository，防止数据库自动更新
+#	卸载Yum Repository防止数据库自动更新
 yum -y remove mysql57-community-release-el7-10.noarch
+
+
