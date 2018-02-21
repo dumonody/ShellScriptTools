@@ -18,11 +18,11 @@ sqlPasswd=${sqlPasswd##*root@localhost: }
 
 #	设置验证密码方针，将默认的ON设置为LOW
 echo "set global validate_password_policy=0;" > sql.log
-mysql -uroot -p$initPassword < sql.log
+mysql -uroot -p$sqlPasswd < sql.log
 
 #	设置验证密码长度，将默认的8设置为4，这里有个特定算法
 echo "set global validate_password_length=4;" > sql.log
-mysql -uroot -p$initPassword < sql.log
+mysql -uroot -p$sqlPasswd < sql.log
 
 #	经过这两步设置，密码就可以设置得很简单
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
