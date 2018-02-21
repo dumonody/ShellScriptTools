@@ -32,6 +32,7 @@ mysql -uroot -p$sqlPasswd < sql.log
 #	输入新的初始密码，否则不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库
 
 #	设置一个初始密码
+echo "请输入密码"
 read initPassword
 
 #	保存到mysql_initPassword中
