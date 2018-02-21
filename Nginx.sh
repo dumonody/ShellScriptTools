@@ -39,7 +39,7 @@ rm -f ../nginx-1.13.8.tar.gz
 make
 make install
 
-#	获取nginx的位置,放在loc变量中
+#	获取nginx的位置, 放在loc变量中
 loc=$(whereis nginx)
 loc=${loc:7}
 
