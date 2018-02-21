@@ -55,8 +55,9 @@ echo "FLUSH PRIVILEGES;" > sql.log
 mysql -uroot -p$initPassword < sql.log
 
 
-#	设置UTF-8字符集
-
+#	设置UTF-8字符集，在特定字符串[mysqld]后面添加一行character-set-server=utf8,注意转义字符
+sed -i '/\[mysqld\]/a\character-set-server=utf8' /etc/my.cnf
+#	可以使用SHOW VARIABLES LIKE 'character%';这条sql语句进行检验
 
 #	设置3306端口开放
 firewall-cmd --zone=public --add-port=3306/tcp --permanent 
@@ -69,5 +70,3 @@ systemctl restart mysqld
 
 #	卸载Yum Repository防止数据库自动更新
 yum -y remove mysql57-community-release-el7-10.noarch
-
-
