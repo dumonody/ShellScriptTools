@@ -40,7 +40,7 @@ echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
 echo "输出sql.log文件内容"
 cat sql.log
 echo "输出初始默认密码：$sqlPasswd"
-mysql -uroot -p$sqlPasswd < sql.log
+mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 
 #	重启mysql数据库
 systemctl restart mysqld
