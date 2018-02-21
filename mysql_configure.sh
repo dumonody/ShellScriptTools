@@ -28,19 +28,21 @@ echo "$initPassword" > /root/secret/mysql_initPassword
 #	修改新的初始密码
 echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$initPassword';" >> sql.log
 #	可以通过命令SHOW VARIABLES LIKE 'validate_password%';进行查看
-echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
+#echo "SHOW VARIABLES LIKE 'validate_password%';" >> sql.log
 #	将sql文件内容导入，完成初始密码的修改，初始密码保存于mysql_password中
 #echo "输出sql.log文件内容"
 #cat sql.log
 #echo "输出初始默认密码：$sqlPasswd"
 mysql -uroot -p$sqlPasswd --connect-expired-password < sql.log
 
-#	重启mysql数据库
+#	重启mysql数据库,注意重启之后，上述的验证设置又还原了，得重新再设置一次
 systemctl restart mysqld
 
 #	设置允许远程登录，并具有所有库任何操作权限
+echo "set global validate_password_policy=0;" > sql.log
+echo "set global validate_password_length=4;" >> sql.log
 #	将授权操作语句写入到sql.log文件中
-echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" > sql.log
+echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$initPassword' WITH GRANT OPTION;" >> sql.log
 #	重载授权表
 echo "FLUSH PRIVILEGES;" >> sql.log
 
