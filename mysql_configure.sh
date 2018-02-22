@@ -1,6 +1,7 @@
 #!/bin/bash
 #	mysql_configure.sh
 #	启动mysql
+echo "开始配置mysql，可能需要点时间..."
 systemctl start mysqld
 sleep 2s
 #	获取当前的数据库密码
@@ -75,4 +76,3 @@ systemctl restart mysqld
 sleep 2s
 #	卸载Yum Repository防止数据库自动更新
 yum -y remove mysql57-community-release-el7-10.noarch
-
