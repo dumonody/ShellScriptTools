@@ -66,5 +66,8 @@ systemctl restart firewalld
 
 #	访问ngnix首页直接访问http://IP:80或者对应的域名即可
 
+# 清理文件夹
+rm -rf nginx-1.13.8
+
 # tip
 echo "nginx安装完毕！"
