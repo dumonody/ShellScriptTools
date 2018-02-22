@@ -47,7 +47,7 @@ loc=${loc:7}
 cd $loc/sbin/
 
 #	先停止nginx--此方式停止步骤是待nginx进程处理任务完毕进行停止
-./nginx -s quit
+#./nginx -s quit
 
 #	启动nginx进程
 ./nginx
@@ -65,3 +65,6 @@ firewall-cmd --zone=public --add-port=80/tcp --permanent
 systemctl restart firewalld
 
 #	访问ngnix首页直接访问http://IP:80或者对应的域名即可
+
+# tip
+echo "nginx安装完毕！"
