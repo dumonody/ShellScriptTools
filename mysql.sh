@@ -11,4 +11,4 @@ rm -f mysql57-community-release-el7-10.noarch.rpm
 rm -f mysql_download.sh
 rm -f mysql_configure.sh
 #	tip
-echo "安装完毕！"
+echo "mysql安装完毕！"
