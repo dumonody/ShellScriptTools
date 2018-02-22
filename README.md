@@ -14,7 +14,7 @@ wget https://raw.githubusercontent.com/dumonody/ShellScriptTools/master/mysql.sh
 ## CentOS 7  安装  Nginx 1.13.8
 **简单说明**
 - 开放80端口，不关闭防火墙
-- 首页地址：http://IP
+- 首页地址：http://IP:80
 - 安装命令如下：
 ```
 wget https://raw.githubusercontent.com/dumonody/ShellScriptTools/master/nginx.sh&&chmod 755 nginx.sh&&./nginx.sh
